@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 const Cta = () => {
     return (
         <>
@@ -19,9 +21,9 @@ const Cta = () => {
                     PrebuiltUI gives you ready-to-use Tailwind CSS components so you can design and launch stunning websites quickly, without starting from scratch.
                 </p>
                 <div className="flex gap-2">
-                    <button className="px-8 py-2.5 mt-4 text-sm bg-indigo-600 hover:scale-105 transition duration-300 text-white rounded-2xl">
+                    <Link to={'/login'} className="px-8 py-2.5 mt-4 text-sm bg-indigo-600 hover:scale-105 transition duration-300 text-white rounded-2xl">
                         Get Started
-                    </button>
+                    </Link>
                     <button className="flex items-center gap-2 px-8 py-2.5 mt-4 text-sm hover:scale-105 transition duration-300">
                         Github
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
