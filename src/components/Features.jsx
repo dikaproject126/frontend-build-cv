@@ -5,12 +5,13 @@ const Features = () => {
     const [isHover, setIsHover] = useState(false);
 
     return (
-        <div className="mt-25">
+        <div className="mt-35" id="features">
             <Title 
                 section={'Features'} 
                 title={'Everything You Need to Stand Out'} 
-                description={'Discover the powerful features that make our platform the perfect solution for your needs.'} /
-            >
+                description={'Discover the powerful features that make our platform the perfect solution for your needs.'}
+            />
+
             <div className="flex flex-col md:flex-row items-center justify-center">
                 <img className="max-w-2xl w-full xl:-ml-32" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/features/group-image-1.png" alt="" />
                 <div className="px-4 md:px-0" onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
