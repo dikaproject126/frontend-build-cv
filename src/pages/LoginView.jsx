@@ -17,6 +17,7 @@ const LoginView = () => {
     email: '',
     password: ''
   })
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
