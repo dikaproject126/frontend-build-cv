@@ -1,9 +1,12 @@
 import { useState } from "react"
 import { Link } from "react-router"
+import { useAuthStore } from "../stores/authStore"
 
 const Hero = () => {
     const [input, setInput] = useState('')
     const [menuOpen, setMenuOpen] = useState(false)
+
+    const { isAuthentication } = useAuthStore()
 
     const onSubmitHandler = (e) => {
         e.preventDefault()
@@ -29,7 +32,11 @@ const Hero = () => {
                     </div>
 
                     <div>
-                        <Link to={'/login'} className='max-sm:hidden cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'>Login</Link>
+                        {isAuthentication ? (
+                            <Link to={'/app'} className='max-sm:hidden cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'>Dashboard</Link>
+                        ) : (
+                            <Link to={'/login'} className='max-sm:hidden cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'>Login</Link>
+                        )}
                         <svg onClick={() => setMenuOpen(true)} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:hidden"><path d="M4 5h16" /><path d="M4 12h16" /><path d="M4 19h16" /></svg>
                     </div>
 
@@ -42,7 +49,11 @@ const Hero = () => {
                         <a href='#features' onClick={() => setMenuOpen(false)}> Features </a>
                         <a href='#testimoni' onClick={() => setMenuOpen(false)}> Testimonials </a>
                         <a href='#cta' onClick={() => setMenuOpen(false)}> Contact </a>
-                        <Link to={'/login'} className=' cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'>Login</Link>
+                        {isAuthentication ? (
+                            <Link to={'/app'} className=' cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'>Dashboard</Link>
+                        ) : (
+                            <Link to={'/login'} className=' cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full'>Login</Link>
+                        )}
                         <svg onClick={() => setMenuOpen(false)} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute size-8 right-6 top-6 text-gray-500 hover:text-gray-700 cursor-pointer"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                     </div>
                 </div>
@@ -83,7 +94,9 @@ const Hero = () => {
                 <p className="max-w-xl text-center text-base my-4">Recruiter ready resume in minutes using our intuitive builder, smart templates, and expert-backed guidance. Land your dream job faster no design skills required.</p>
 
                 {/* Search Box */}
-                <Link to={'/login'} className='bg-white border border-indigo-600 text-indigo-600 p-3 my-4 px-10 rounded-full cursor-pointer hover:bg-indigo-100'> Login Now! </Link>
+                {!isAuthentication && (
+                    <Link to={'/login'} className='bg-white border border-indigo-600 text-indigo-600 p-3 my-4 px-10 rounded-full cursor-pointer hover:bg-indigo-100'> Login Now! </Link>
+                )}
             </div>
             <style>
                 {`

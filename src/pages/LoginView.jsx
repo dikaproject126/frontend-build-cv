@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { User2Icon, Mail, Lock } from "lucide-react"
-import { useNavigate } from "react-router"
+import { Navigate, useNavigate } from "react-router"
 import { useAuthStore } from "../stores/authStore"
 import api from "../configs/axios"
 
@@ -11,7 +11,7 @@ const LoginView = () => {
 
   
   const navigate = useNavigate();
-  const { setUserData } = useAuthStore()
+  const { setUserData, isAuthentication } = useAuthStore()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -29,6 +29,11 @@ const LoginView = () => {
         alert("Login Successfull")
         setUserData(data.user)
         navigate('/app')
+      } else {
+        await api.post('/auth/register', formData)
+        alert("Registrasi Successfull")
+        setFormData(prev => ({ ...prev, name: '', password: '' }))
+        setState("login")
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -42,8 +47,14 @@ const LoginView = () => {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const handleToggleMode = () => {
+    setState(prev => prev === "login" ? "register" : "login")
+    setFormData({ name: '', email: '', password: '' })
+    setErrorMessage("")
+  }
 
-  return (
+
+  return !isAuthentication ? (
     <div className="flex justify-center items-center min-h-screen bg-gray-200">
       <form onSubmit={handleSubmit} className="sm:w-[350px] w-full text-center border border-gray-300/60 rounded-2xl px-8 bg-white">
         <h1 className="text-gray-900 text-3xl mt-10 font-medium">{state === "login" ? "Login" : "Sign up"}</h1>
@@ -68,10 +79,12 @@ const LoginView = () => {
         <button type="submit" className="mt-2 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed" disabled={disable}>
           {state === "login" ? "Login" : "Sign up"}
         </button>
-        <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? "Don't have an account?" : "Already have an account?"} <a href="#" className="text-indigo-500 hover:underline">click here</a></p>
+        <p className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? "Don't have an account?" : "Already have an account?"} <button type="button" onClick={handleToggleMode} className="text-indigo-500 hover:underline">click here</button></p>
       </form>
     </div>
-  )
+  ) : (
+     <Navigate to="/app" replace/>
+  );
 }
 
 export default LoginView

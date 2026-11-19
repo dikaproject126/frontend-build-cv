@@ -1,13 +1,17 @@
-import { Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import Header from "../components/Header";
+import { useAuthStore } from "../stores/authStore"
 
 const MainLayout = () => {
-  return (
+  const { isAuthentication } = useAuthStore()
+
+  return isAuthentication ? (
     <>
         <Header/>
         <Outlet/>
-        <h1>Footer</h1>
     </>
+  ) : (
+    <Navigate to={"/login"} replace />
   )
 }
 
