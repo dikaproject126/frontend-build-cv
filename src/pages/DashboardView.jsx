@@ -1,4 +1,4 @@
-import { XIcon, PlusIcon, FilePenLineIcon } from 'lucide-react'
+import { XIcon, PlusIcon, FilePenLineIcon, TrashIcon, PencilIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import api from '../configs/axios'
 
@@ -11,13 +11,15 @@ const DashboardView = () => {
   const handleCreateResume = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/resume", { title })
+      const response = await api.post("/resume", { title })
+      setResumes((currentResumes) => [...currentResumes, response.data.resume])
 
       alert("Berhasil buat Resume")
 
       setTitle("")
 
       setShowCreateResume(false);
+      getAllResume()
     } catch (error) {
       setErrorMsg(error.response.data.message || 'Gagal membuat resume');
     }
@@ -27,6 +29,18 @@ const DashboardView = () => {
   const getAllResume = async () => {
     const response = await api.get('/resume')
     setResumes(response.data.resume)
+  }
+
+  const deleteResume = async (resumeId) => {
+    const confirmed = window.confirm("Are you sure want to delete this Resume?")
+    if (confirmed) {
+      try {
+        await api.delete(`/resume/${resumeId}`)
+        setResumes((currentResumes) => currentResumes.filter((resume) => resume._id !== resumeId))
+      } catch (error) {
+        window.alert(error.response?.data?.message || error.message || 'Gagal menghapus resume')
+      }
+    }
   }
 
   useEffect(() => {
@@ -60,7 +74,17 @@ const DashboardView = () => {
                   <button key={item._id} className='relative w-full sm:w-36 h-48 flex flex-col items-center justify-center rounded-xl gap-2 border group hover:shadow-lg transition-all duration-300 cursor-pointer bg-indigo-400/50'>
                     <FilePenLineIcon className="size-7 group-hover:scale-105 transition-all" />
                     <p className="text-sm group-hover:scale-105 trasition-all text-center ">{item.title}</p>
-                    <p className='absolute button-1 text-sm text-slate-600 group-hover:text-slate-700 transition-all duration-300 px-2 text-center'>Update on {new Date(item.updatedAt).toLocalDateString()}</p>
+                    <p className='absolute bottom-1 left-0 right-0 text-sm text-slate-600 group-hover:text-slate-700 transition-all duration-300 px-2 text-center'>Update on {new Date(item.updatedAt).toLocaleDateString()}</p>
+                    <div onClick={(e) => e.stopPropagation()} className='absolute top-1 right-1 group-hover:flex items-center hidden'>
+                      <span onClick={() => deleteResume(item._id)} className='relative group/action'>
+                        <TrashIcon aria-label='Hapus' className='size-8 p-2 hover:bg-white/50 rounded transition-colors text-red-500'/>
+                        <span className='pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover/action:opacity-100'>Hapus</span>
+                      </span>
+                      <span className='relative group/action'>
+                        <PencilIcon aria-label='Edit' className='size-8 p-2 hover:bg-white/50 rounded transition-colors text-indigo-600'/>
+                        <span className='pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover/action:opacity-100'>Edit</span>
+                      </span>
+                    </div>
                   </button>
                 )
               })}
